@@ -31,9 +31,10 @@ public slots:
     void setQuadAltitudeButton();
 signals:
     void setCenter(QVariant, QVariant);
-    void addMarker(QVariant, QVariant);
+    void changeMarkerLocation(QVariant, QVariant);
     void settingInfoCameSignal(SendInformations info);
     void sendCommand(ReceiveInformations quadCommand);
+
 #if DEBUG_ == 1
     void debugValuesChangeSignal(DebugValues value);
 #endif

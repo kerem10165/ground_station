@@ -39,15 +39,13 @@ MainWindow::~MainWindow()
 void MainWindow::connectSignalsAndEmit()
 {
     auto obj = ui->quickWidget->rootObject();
-    //    connect(this, SIGNAL(setCenter(QVariant, QVariant)), obj, SLOT(setCenter(QVariant, QVariant)));
-    //    connect(this, SIGNAL(addMarker(QVariant, QVariant)), obj, SLOT(addMarker(QVariant, QVariant)));
+    connect(this, SIGNAL(changeMarkerLocation(QVariant, QVariant)), obj, SLOT(changeMarkerLocation(QVariant, QVariant)));
     connect(obj, SIGNAL(locationChangeSignal(QVariant)), this, SLOT(locationChageFromMap(QVariant)));
     connect(serialController , &SerialController::emitUpdateTelemetrySignal , this , &MainWindow::updateTelemetryData);
     connect(ui->setQuadParams, &QPushButton::clicked , this , &MainWindow::openParamSetMenu);
     connect(ui->setQuadAlt , &QPushButton::clicked , this , &MainWindow::setQuadAltitudeButton);
     connect(this , &MainWindow::sendCommand , serialController , &SerialController::sendCommandAndSettings);
-    //    emit setCenter(25.000, 50.000);
-    //    emit addMarker(25.000, 50.000);
+    emit changeMarkerLocation(0, 0);
 }
 
 void MainWindow::locationChageFromMap(QVariant coordinate)
@@ -71,6 +69,10 @@ void MainWindow::updateTelemetryData(QByteArray data)
         ui->lat_info->setValue(cameFromQuad.data.status.latitude);
         ui->lon_info->setValue(cameFromQuad.data.status.longtitude);
 
+        if(static_cast<int>(cameFromQuad.data.status.latitude) != 0)
+        {
+            emit changeMarkerLocation(cameFromQuad.data.status.latitude, cameFromQuad.data.status.longtitude);
+        }
 #if DEBUG_ == 1
         auto diff = cameFromQuad.data.status.debug.altitude - cameFromQuad.data.status.altitude;
         cameFromQuad.data.status.debug.altitude-=diff;

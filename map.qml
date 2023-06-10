@@ -9,8 +9,8 @@ Map {
     plugin: Plugin {name: "osm"}
     zoomLevel: 12
     center {
-        latitude: 41.024470
-        longitude: 28.946281
+        latitude: 41
+        longitude: 29
     }
 
     MapQuickItem {
@@ -43,4 +43,27 @@ Map {
             parent.locationChangeSignal(marker.coordinate)
         }
     }
+
+    function changeMarkerLocation(lat, lng)
+    {
+        mapMarker.coordinate = QtPositioning.coordinate(lat, lng)
+    }
+
+    MapQuickItem {
+        id:mapMarker
+        sourceItem: Rectangle
+        {
+            id: mapWaypointMarker
+            width: 15
+            height: 15
+            radius: 15
+            border.width: 1
+            color: "red"
+            border.color: "gray"
+        }
+        coordinate: {0.0; 0.0}
+        anchorPoint.x: image.width / 2
+        anchorPoint.y: image.height / 2
+    }
+
 }
